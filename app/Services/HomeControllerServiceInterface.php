@@ -5,7 +5,7 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 
-interface QueueControllerServiceInterface
+interface HomeControllerServiceInterface
 {
 
     //Returns json response, uses LogResource class

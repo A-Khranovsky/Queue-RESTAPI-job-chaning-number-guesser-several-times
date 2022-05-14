@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\HomeControllerService;
+use App\Services\HomeControllerServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(HomeControllerServiceInterface::class, function(){
+            return new HomeControllerService();
+        });
     }
 
     /**

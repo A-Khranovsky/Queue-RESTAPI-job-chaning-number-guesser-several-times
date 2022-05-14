@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Param extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'params',
+        'startDateTime',
+        'completionTime',
+        'endDateTime'
+    ];
+
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
 }

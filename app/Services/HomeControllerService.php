@@ -5,11 +5,12 @@ namespace App\Services;
 
 
 use App\Http\Resources\LogsResource;
-use App\Jobs\Job;
+use App\Jobs\GuessJob;
 use App\Models\Log;
 use App\Models\Param;
+use Illuminate\Support\Facades\Bus;
 
-class QueueControllerService implements QueueControllerServiceInterface
+class HomeControllerService implements HomeControllerServiceInterface
 {
 
     public function show($request)
@@ -23,6 +24,7 @@ class QueueControllerService implements QueueControllerServiceInterface
     public function start($request)
     {
         $args = [];
+        $chain = [];
         $result = '';
         if ($request->has('backoff')) {
             $args['backoff'] = $request->backoff;
@@ -36,8 +38,16 @@ class QueueControllerService implements QueueControllerServiceInterface
         if ($request->has('range')) {
             $args['range'] = $request->range;
         }
-        Job::dispatch($args);
-        if (!empty($args)) {
+
+        $chainLength = $request->links ?? 1;
+
+        for($i = 1; $i <= $chainLength; $i++) {
+            $chain[] = new GuessJob($args);
+        }
+
+        Bus::chain($chain)->dispatch();
+
+        if (sizeof($args) > 0) {
             $result = ' Args:';
             array_walk_recursive($args, function($item, $key) use(&$result){
                 $result .= ' ' . $key . ' = ' . $item;
