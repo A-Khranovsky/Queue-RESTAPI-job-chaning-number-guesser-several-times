@@ -31,7 +31,7 @@ class HomeControllerService implements HomeControllerServiceInterface
         $args['guessNumber'] = $request->guess_number ?? 50;
         $args['range'] = $request->range ?? ['start' => 0, 'end' => 100];
 
-        $args['chainLength'] = $request->links ?? 1;
+        $args['chainLength'] = $request->chain ?? 2;
 
         for ($i = 1; $i <= $args['chainLength']; $i++) {
             $chain[] = new GuessJob($args);
@@ -44,7 +44,7 @@ class HomeControllerService implements HomeControllerServiceInterface
             $result .= ' ' . $key . ' = ' . $item;
         });
 
-        return response('Started, transaction = ' . time() . $result ?? '', 200);
+        return response('Started, ' . $result ?? '', 200);
     }
 
     public function clear()

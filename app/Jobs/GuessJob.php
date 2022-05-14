@@ -47,7 +47,7 @@ class GuessJob implements ShouldQueue
             'startDateTime' => date("Y-m-d H:i:s")
         ]);
         $this->idParam = $param->id;
-        $this->transaction = time();
+        $this->transaction = time() + $param->id;
     }
 
     /**
