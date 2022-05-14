@@ -21,11 +21,11 @@ pcntl \
 bcmath \
 gd
 RUN pecl install apcu-5.1.20 && docker-php-ext-enable apcu
-COPY docker/app/php.ini   $PHP_INI_DIR/conf.d/
+COPY .docker/app/php.ini   $PHP_INI_DIR/conf.d/
 RUN curl -sS https://getcomposer.org/installer | \
 php -- --install-dir=/usr/local/bin --filename=composer
 WORKDIR /var/www/app
 COPY . /var/www/app
 RUN composer update
-ADD docker/app/supervisor.conf /etc/supervisor/conf.d/worker.conf
+ADD .docker/app/supervisor.conf /etc/supervisor/conf.d/worker.conf
 EXPOSE 9000
