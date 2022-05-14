@@ -25,34 +25,24 @@ class HomeControllerService implements HomeControllerServiceInterface
     {
         $args = [];
         $chain = [];
-        $result = '';
-        if ($request->has('backoff')) {
-            $args['backoff'] = $request->backoff;
-        }
-        if ($request->has('tries')) {
-            $args['tries'] = $request->tries;
-        }
-        if ($request->has('guess_number')) {
-            $args['guessNumber'] = $request->guess_number;
-        }
-        if ($request->has('range')) {
-            $args['range'] = $request->range;
-        }
 
-        $chainLength = $request->links ?? 1;
+        $args['backoff'] = $request->backoff ?? 0;
+        $args['tries'] = $request->tries ?? 100;
+        $args['guessNumber'] = $request->guess_number ?? 50;
+        $args['range'] = $request->range ?? ['start' => 0, 'end' => 100];
 
-        for($i = 1; $i <= $chainLength; $i++) {
+        $args['chainLength'] = $request->links ?? 1;
+
+        for ($i = 1; $i <= $args['chainLength']; $i++) {
             $chain[] = new GuessJob($args);
         }
 
         Bus::chain($chain)->dispatch();
 
-        if (sizeof($args) > 0) {
-            $result = ' Args:';
-            array_walk_recursive($args, function($item, $key) use(&$result){
-                $result .= ' ' . $key . ' = ' . $item;
-            });
-        }
+        $result = ' Args:';
+        array_walk_recursive($args, function ($item, $key) use (&$result) {
+            $result .= ' ' . $key . ' = ' . $item;
+        });
 
         return response('Started, transaction = ' . time() . $result ?? '', 200);
     }
@@ -74,10 +64,10 @@ class HomeControllerService implements HomeControllerServiceInterface
                 'guess number' => $total->whereIn('transaction', $item)->pluck('guessNumber')->first(),
                 'status' => $total->whereIn('transaction', $item)->pluck('status')->last(),
                 'used tries' => $total->whereIn('transaction', $item)->count(),
-                'params' => json_decode($total->where('transaction','=', $item)->first()->param->params),
-                'start date' => $total->where('transaction','=', $item)->first()->param->startDateTime,
-                'end date' => $total->where('transaction','=', $item)->first()->param->endDateTime,
-                'completion time' => $total->where('transaction','=', $item)->first()->param->completionTime,
+                'params' => json_decode($total->where('transaction', '=', $item)->first()->param->params),
+                'start date' => $total->where('transaction', '=', $item)->first()->param->startDateTime,
+                'end date' => $total->where('transaction', '=', $item)->first()->param->endDateTime,
+                'completion time' => $total->where('transaction', '=', $item)->first()->param->completionTime,
             ];
 
         });
