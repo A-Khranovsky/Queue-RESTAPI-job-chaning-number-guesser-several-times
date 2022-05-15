@@ -14,5 +14,6 @@ interface HomeControllerServiceInterface
     public function start(Request $request);
     public function clear();
     public function total();
+    public function result();
 
 }

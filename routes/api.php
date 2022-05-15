@@ -8,3 +8,4 @@ Route::get('/logs', [HomeController::class, 'show']);
 Route::post('/logs/clear', [HomeController::class, 'clear']);
 Route::get('/start', [HomeController::class,'start']);
 Route::get('/total', [HomeController::class,'total']);
+Route::get('/result', [HomeController::class,'result']);

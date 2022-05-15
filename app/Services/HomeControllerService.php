@@ -26,12 +26,16 @@ class HomeControllerService implements HomeControllerServiceInterface
         $args = [];
         $chain = [];
 
-        $args['backoff'] = $request->backoff ?? 0;
-        $args['tries'] = $request->tries ?? 100;
-        $args['guessNumber'] = $request->guess_number ?? 50;
-        $args['range'] = $request->range ?? ['start' => 0, 'end' => 100];
+        $args['backoff'] = $request->backoff ?? config('guessjob.backoff', 0);
+        $args['tries'] = $request->tries ?? config('guessjob.tries', 100);
+        $args['guessNumber'] = $request->guess_number ?? config('guessjob.guessNumber', 50);
+        $args['range'] =
+            [
+                'start' => $request->range['start'] ?? config('guessjob.rangeStart',0),
+                'end' => $request->range['end'] ?? config('guessjob.rangeEnd', 100),
+            ];
 
-        $args['chainLength'] = $request->chain ?? 2;
+        $args['chainLength'] = $request->chain ?? config('guessjob.chainLength', 2);
 
         for ($i = 1; $i <= $args['chainLength']; $i++) {
             $chain[] = new GuessJob($args);
@@ -73,5 +77,10 @@ class HomeControllerService implements HomeControllerServiceInterface
         });
 
         return $result;
+    }
+
+    public function result()
+    {
+
     }
 }
