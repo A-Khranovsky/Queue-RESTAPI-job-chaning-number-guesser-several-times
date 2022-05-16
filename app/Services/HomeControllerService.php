@@ -31,7 +31,7 @@ class HomeControllerService implements HomeControllerServiceInterface
         $args['guessNumber'] = $request->guess_number ?? config('guessjob.guessNumber', 50);
         $args['range'] =
             [
-                'start' => $request->range['start'] ?? config('guessjob.rangeStart',0),
+                'start' => $request->range['start'] ?? config('guessjob.rangeStart', 0),
                 'end' => $request->range['end'] ?? config('guessjob.rangeEnd', 100),
             ];
 
@@ -81,6 +81,30 @@ class HomeControllerService implements HomeControllerServiceInterface
 
     public function result()
     {
+        $result = [];
+        $param = Param::all();
 
+        $param->each(function ($item, $key) use (&$result) {
+            $statusOkItem = $item->logs->filter(function ($item, $key) {
+                return $item['status'] === 'OK';
+            });
+
+            if (sizeof($statusOkItem) > 0) {
+                $statusOkItem = $statusOkItem->pluck('transaction', 'status')->all();
+                $result[] = $statusOkItem;
+            } else {
+                $statusFailedItem = $item->logs->filter(function ($item, $key) {
+                    return $item['status'] === 'Failed';
+                });
+                if(sizeof($statusFailedItem) > 0) {
+                    $statusFailedItem = $statusFailedItem->pluck('transaction', 'status')->all();
+                    $result[] = $statusFailedItem;
+                } else {
+                    $result[] = 'Aborted';
+                }
+            }
+        });
+
+        return $result;
     }
 }

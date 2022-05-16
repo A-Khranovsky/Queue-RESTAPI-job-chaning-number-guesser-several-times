@@ -33,4 +33,9 @@ class HomeController extends Controller
     {
         return $this->queueControllerService->total();
     }
+
+    public function result()
+    {
+        return $this->queueControllerService->result();
+    }
 }
