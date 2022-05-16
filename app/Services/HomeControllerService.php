@@ -90,15 +90,21 @@ class HomeControllerService implements HomeControllerServiceInterface
             });
 
             if (sizeof($statusOkItem) > 0) {
-                $statusOkItem = $statusOkItem->pluck('transaction', 'status')->all();
-                $result[] = $statusOkItem;
+                //$statusOkItem = $statusOkItem->pluck('transaction', 'status')->all();
+                $result[] = [
+                    'transaction' => $statusOkItem->first()->transaction,
+                    'status' => 'OK'
+                ];
             } else {
                 $statusFailedItem = $item->logs->filter(function ($item, $key) {
                     return $item['status'] === 'Failed';
                 });
-                if(sizeof($statusFailedItem) > 0) {
-                    $statusFailedItem = $statusFailedItem->pluck('transaction', 'status')->all();
-                    $result[] = $statusFailedItem;
+                if (sizeof($statusFailedItem) > 0) {
+                    //$statusFailedItem = $statusFailedItem->pluck('transaction', 'status')->all();
+                    $result[] = [
+                        'transaction' => $statusFailedItem->first()->transaction,
+                        'status' => 'Failed'
+                    ];
                 } else {
                     $result[] = 'Aborted';
                 }
