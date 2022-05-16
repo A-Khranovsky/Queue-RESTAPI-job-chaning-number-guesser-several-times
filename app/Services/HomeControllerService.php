@@ -85,12 +85,15 @@ class HomeControllerService implements HomeControllerServiceInterface
         $param = Param::all();
 
         $param->each(function ($item, $key) use (&$result) {
+            $result[] = [
+                'chain length' => json_decode($item->params, true)['chainLength']
+            ];
+
             $statusOkItem = $item->logs->filter(function ($item, $key) {
                 return $item['status'] === 'OK';
             });
 
             if (sizeof($statusOkItem) > 0) {
-                //$statusOkItem = $statusOkItem->pluck('transaction', 'status')->all();
                 $result[] = [
                     'transaction' => $statusOkItem->first()->transaction,
                     'status' => 'OK'
@@ -100,7 +103,6 @@ class HomeControllerService implements HomeControllerServiceInterface
                     return $item['status'] === 'Failed';
                 });
                 if (sizeof($statusFailedItem) > 0) {
-                    //$statusFailedItem = $statusFailedItem->pluck('transaction', 'status')->all();
                     $result[] = [
                         'transaction' => $statusFailedItem->first()->transaction,
                         'status' => 'Failed'
