@@ -81,14 +81,19 @@ class HomeControllerService implements HomeControllerServiceInterface
 
     public function result()
     {
+        $chainCount = 0;
         $result = [];
         $param = Param::all();
 
-        $param->each(function ($item, $key) use (&$result) {
-            $result[] = [
-                'chain length' => json_decode($item->params, true)['chainLength']
-            ];
+        $param->each(function ($item, $key) use (&$result, &$chainCount) {
+            $chainCount++;
+            $chainLength = json_decode($item->params, true)['chainLength'];
 
+            if ($chainCount === $chainLength - ($chainLength - 1)) {
+                $result[] = [
+                    'chain length' => $chainLength
+                ];
+            }
             $statusOkItem = $item->logs->filter(function ($item, $key) {
                 return $item['status'] === 'OK';
             });
@@ -110,6 +115,10 @@ class HomeControllerService implements HomeControllerServiceInterface
                 } else {
                     $result[] = 'Aborted';
                 }
+            }
+
+            if($chainCount == $chainLength){
+                $chainCount = 0;
             }
         });
 
