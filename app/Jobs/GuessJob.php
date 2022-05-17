@@ -17,14 +17,7 @@ class GuessJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $args = [
-        'tries' => 100,
-        'guessNumber' => 50,
-        'range' => [
-            'start' => 0,
-            'end' => 100
-        ]
-    ];
+    protected $args = [];
     protected int $transaction;
     protected int $randNumber;
     protected int $idParam;
@@ -37,9 +30,7 @@ class GuessJob implements ShouldQueue
      */
     public function __construct($args)
     {
-        if (sizeof($args) > 0) {
-            $this->args = array_merge($this->args, $args);
-        }
+        $this->args = $args;
         $this->tries = $this->args['tries'];
         $param = Param::create([
             'params' => json_encode($this->args),
