@@ -6,7 +6,7 @@ App uses RESTAPI to: direct it, input parameters, get result info, get log info.
 ## Endpoints:  
 * GET http://localhost:80/api/app/start  
 Starts app with the default settings (from .env). Can receive paramaters(all or their combinations):  
-  * chain=x, x is nuber of chain's links  
+  * chain=x, x is number of chain's links  
   * tries=x, x is number of tries in all the chain's links
   * guess_number=x, x is number app will try to guess in all the chain's links
   * range[start]=x&range[end]=y, x and y is numbers describes start of the range and end respectively
