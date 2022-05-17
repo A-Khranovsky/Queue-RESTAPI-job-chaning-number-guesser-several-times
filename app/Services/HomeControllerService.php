@@ -18,6 +18,7 @@ class HomeControllerService implements HomeControllerServiceInterface
         if ($request->has('transaction')) {
             return LogsResource::collection(Log::where('transaction', '=', $request->get('transaction'))->get());
         }
+
         return LogsResource::collection(Log::all());
     }
 
@@ -26,7 +27,6 @@ class HomeControllerService implements HomeControllerServiceInterface
         $args = [];
         $chain = [];
 
-        $args['backoff'] = $request->backoff ?? config('guessjob.backoff', 0);
         $args['tries'] = $request->tries ?? config('guessjob.tries', 100);
         $args['guessNumber'] = $request->guess_number ?? config('guessjob.guessNumber', 50);
         $args['range'] =
@@ -54,14 +54,16 @@ class HomeControllerService implements HomeControllerServiceInterface
     public function clear()
     {
         Param::where('id', '>', 0)->delete();
+
         return response('Cleared', 200);
     }
 
     public function total()
     {
+        $result = [];
         $total = Log::all();
         $transactions = $total->pluck('transaction')->unique();
-        $result = [];
+
         $transactions->each(function ($item, $key) use (&$result, $total) {
             $result[] = [
                 'transaction' => $item,

@@ -18,7 +18,6 @@ class GuessJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $args = [
-        'backoff' => 0,
         'tries' => 100,
         'guessNumber' => 50,
         'range' => [
@@ -89,10 +88,5 @@ class GuessJob implements ShouldQueue
     public function failed(Exception $exception)
     {
         event(new FailedExceptionEvent($exception));
-    }
-
-    public function backoff()
-    {
-        return $this->args['backoff'];
     }
 }
