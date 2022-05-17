@@ -101,6 +101,7 @@ class HomeControllerService implements HomeControllerServiceInterface
             if (sizeof($statusOkItem) > 0) {
                 $result[] = [
                     'transaction' => $statusOkItem->first()->transaction,
+                    'guess number'  => $statusOkItem->first()->guessNumber,
                     'status' => 'OK'
                 ];
             } else {
@@ -110,6 +111,7 @@ class HomeControllerService implements HomeControllerServiceInterface
                 if (sizeof($statusFailedItem) > 0) {
                     $result[] = [
                         'transaction' => $statusFailedItem->first()->transaction,
+                        'guess number'  => $statusFailedItem->first()->guessNumber,
                         'status' => 'Failed'
                     ];
                 } else {
