@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Http\Resources\LogsResource;
 use App\Jobs\GuessJob;
 use App\Models\Log;
