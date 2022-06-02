@@ -6,7 +6,7 @@ App uses RESTAPI to: direct it, input parameters, get result info, get log info.
 ## Endpoints:  
 * GET http://localhost:80/api/app/start  
 Starts app with the default settings (from .env). Can receive paramaters(all or their combinations):  
-  * chain=x, x is number of chain's links  
+  * links=x, x is number of chain's links  
   * tries=x, x is number of tries in all the chain's links
   * guess_number=x, x is number app will try to guess in all the chain's links
   * range[start]=x&range[end]=y, x and y is numbers describes start of the range and end respectively
@@ -25,7 +25,7 @@ Outputs simple guessing process.
 Clear all the logs
 ```
 Default settings:  
-    Chain legth = 2
+    Links count = 2
     Tries = 100
     Guess number = 50
     Range start = 0
@@ -59,7 +59,7 @@ Accept: application/json
 
 * Start guessing a number and chain's links number
 ```
-GET http://localhost:80/api/start?guess_number=32&chain=5
+GET http://localhost:80/api/start?guess_number=32&links=5
 Accept: application/json
 
 ###
@@ -151,7 +151,7 @@ X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 59
 Access-Control-Allow-Origin: *
 
-Started,  Args: tries = 100 guessNumber = 51 start = 0 end = 100 chainLength = 2
+Started,  Args: tries = 100 guessNumber = 51 start = 0 end = 100 links = 2
 
 Response code: 200 (OK); Time: 321ms; Content length: 80 bytes
 

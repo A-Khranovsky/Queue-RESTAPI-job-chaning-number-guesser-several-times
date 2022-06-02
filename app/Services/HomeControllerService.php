@@ -24,7 +24,7 @@ class HomeControllerService implements HomeControllerServiceInterface
     public function start($request)
     {
         $args = [];
-        $chain = [];
+        $links = [];
 
         $args['tries'] = $request->tries ?? config('guessjob.tries');
         $args['guessNumber'] = $request->guess_number ?? config('guessjob.guessNumber');
@@ -34,13 +34,13 @@ class HomeControllerService implements HomeControllerServiceInterface
                 'end' => $request->range['end'] ?? config('guessjob.rangeEnd'),
             ];
 
-        $args['chainLength'] = $request->chain ?? config('guessjob.chainLength');
+        $args['links'] = $request->links ?? config('guessjob.links');
 
-        for ($i = 1; $i <= $args['chainLength']; $i++) {
-            $chain[] = new GuessJob($args);
+        for ($i = 1; $i <= $args['links']; $i++) {
+            $links[] = new GuessJob($args);
         }
 
-        Bus::chain($chain)->dispatch();
+        Bus::chain($links)->dispatch();
 
         $result = ' Args:';
         array_walk_recursive($args, function ($item, $key) use (&$result) {
